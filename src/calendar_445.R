@@ -28,6 +28,7 @@ calendar.tbl <- tibble(
   wk.num.445  = dense_rank(wk.start.date),
   
   mo.445 = dense_rank(cut(wk.num.445,c(0,4,8,13,17,21,26,30,34,39,43,47,52,56))), ## how can i do this more nicely
+  #mo.445 = c(rep(rep(c(1:12), rep(c(4,4,5),4)),each=7),1),
   qt.445 = paste0("Q",quarter(mo.445)),
   
   yqm.445  = paste0(yr, " ", qt.445, " Period " ,mo.445, "(",month.abb[mo.445],")")
@@ -38,6 +39,8 @@ calendar.tbl <- tibble(
 calendar.tbl %>% filter(date==today())
 
 
+
+## Calendar 4-4-5 Version 1
 ggplot(calendar.tbl %>% filter(mo.445<=12), aes(x=wday, y=wk.num.445)) + 
   geom_tile(color="white", aes(fill=factor(mo))) +
   geom_text(aes(label=format(date,"%e")), family="Roboto Condensed", color="white") +
@@ -47,8 +50,20 @@ ggplot(calendar.tbl %>% filter(mo.445<=12), aes(x=wday, y=wk.num.445)) +
   labs(title="2018 Calendar", subtitle="With Week Number Listed") +
   scale_fill_tableau("cyclic", name="Gregorian Month") +
   guides(fill = guide_legend(nrow =1 , position="left")) +
-  theme(legend.position="")
+  theme(legend.position="top")
 
 ggsave(filename="Images/2018_445_Cakebdar.png", device = "png", width=16, height=9)
 
+ggplot(calendar.tbl %>% filter(mo.445<=12), aes(x=wday, y=wk.num.445)) + 
+  geom_tile(color="white", aes(fill=factor(mo))) +
+  geom_text(aes(label=format(date,"%b\n%e")), family="Roboto Condensed", color="white", lineheight=0.75) +
+  scale_y_reverse(breaks=c(1:53)) + 
+  facet_wrap(~qt.445, scales="free", ncol=4) + 
+  theme_ipsum_rc() +
+  labs(title="2018 Calendar", subtitle="With Week Number Listed") +
+  scale_fill_tableau("cyclic", name="Gregorian Month") +
+  guides(fill = guide_legend(nrow =1 , position="left")) +
+  theme(legend.position="bottom")
+
+ggsave(filename="Images/2018_445_Cakebdar2.png", device = "png", width=16, height=9)
 
