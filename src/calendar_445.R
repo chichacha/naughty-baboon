@@ -67,3 +67,15 @@ ggplot(calendar.tbl %>% filter(mo.445<=12), aes(x=wday, y=wk.num.445)) +
 
 ggsave(filename="Images/2018_445_Cakebdar2.png", device = "png", width=16, height=9)
 
+
+ggplot(calendar.tbl %>% filter(mo.445<=12), aes(x=wk.num.445, y=fct_rev(wday))) + 
+  geom_tile(color="white", aes(fill=factor(mo))) +
+  geom_text(aes(label=format(date,"%b\n%e")), family="Roboto Condensed", color="white", lineheight=0.75) +
+  theme_ipsum_rc() +
+  labs(title="2018 Calendar", subtitle="With Week Number Listed") +
+  scale_fill_tableau("cyclic", name="Gregorian Month") +
+  scale_x_continuous(breaks=c(1:52)) +
+  guides(fill = guide_legend(nrow =1 , position="left")) +
+  theme(legend.position="bottom")
+
+ggsave(filename="Images/2018_445_Cakebdar3.png", device = "png", width=16, height=9)
